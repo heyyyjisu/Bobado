@@ -16,6 +16,10 @@ body {
   }
 }
 
+button {
+  cursor: pointer;
+}
+
 .fruit-sway {
   animation: sway 1s steps(2) infinite;
   transform-origin: top center;

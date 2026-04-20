@@ -28,5 +28,6 @@ export async function POST(req: NextRequest) {
     }
   } catch (error) {
     console.error(error);
+    return NextResponse.json({ msg: "Login failed" }, { status: 500 });
   }
 }
