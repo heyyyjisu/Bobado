@@ -1,5 +1,6 @@
 "use client";
 
+import DecorativeTree from "@/components/DecorativeTree";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -27,6 +28,7 @@ export default function Register() {
   return (
     <div className="w-full max-w-md mx-auto px-4 py-6">
       <h1 className="text-4xl text-center font-normal mb-6">bobado</h1>
+      <DecorativeTree />
       <div className="bg-[#F0E8E0] rounded-2xl p-4 mb-4">
         <div>
           <h1 className="text-lg font-bold mb-3">Register</h1>

@@ -79,8 +79,12 @@ export default function Tree({ incompleteTodos }: Fruit) {
           <img
             key={incompleteTodos[index]._id}
             src={categoryImages[incompleteTodos[index].category]}
-            className="absolute w-8 h-8"
-            style={{ left: pos.x, top: pos.y }}
+            className="absolute w-8 h-8 fruit-sway drop-shadow-md"
+            style={{
+              left: pos.x,
+              top: pos.y,
+              filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.2))",
+            }}
           />
         ))}
       </div>

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { setCookie } from "cookies-next";
+import DecorativeTree from "@/components/DecorativeTree";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
@@ -29,6 +30,7 @@ export default function Login() {
   return (
     <div className="w-full max-w-md mx-auto px-4 py-6">
       <h1 className="text-4xl text-center font-normal mb-6">bobado</h1>
+      <DecorativeTree />
       <div className="bg-[#F0E8E0] rounded-2xl p-4 mb-4">
         <h1 className="text-lg font-bold mb-3">Log in</h1>
         <p className="text-sm mb-1">Email</p>
