@@ -18,7 +18,7 @@ export default function CategoryCard({
   onDelete,
 }: Card) {
   return (
-    <div className="bg-[#f5ede6] rounded-2xl p-3">
+    <div className="bg-[#f5ede6] rounded-2xl p-3 shadow-sm">
       {/* header */}
       <div className="flex items-center justify-center gap-2 mb-2">
         <img className="w-6 h-6" src={icon} />

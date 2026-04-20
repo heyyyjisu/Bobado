@@ -7,7 +7,7 @@ import User from "@/models/user.model";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const JWT = process.env.JWT_SECRET;
@@ -30,7 +30,7 @@ export async function DELETE(
     if (!user) {
       return NextResponse.json({ msg: "User not found" }, { status: 401 });
     }
-    const id = params.id;
+    const { id } = await params;
     const todos = await Todo.findOneAndDelete({ _id: id, user: user._id });
     return NextResponse.json(todos);
   } catch (error) {
@@ -40,7 +40,7 @@ export async function DELETE(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const JWT = process.env.JWT_SECRET;
@@ -63,7 +63,7 @@ export async function PUT(
     if (!user) {
       return NextResponse.json({ msg: "User not found" }, { status: 401 });
     }
-    const id = params.id;
+    const { id } = await params;
     const body = await req.json();
     const todos = await Todo.findOneAndUpdate(
       { _id: id, user: user._id },

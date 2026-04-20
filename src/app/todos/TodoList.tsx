@@ -95,7 +95,7 @@ export default function TodoList({ initialTodos }: Props) {
       <div className="flex justify-center mb-4">
         <Tree incompleteTodos={incompleteTodos} />
       </div>
-      <div className="bg-[#F0E8E0] rounded-2xl p-4 mb-4">
+      <div className="bg-[#F0E8E0] rounded-2xl p-4 mb-4 shadow-sm">
         <textarea
           className="w-full bg-transparent resize-none outline-none text-sm mb-4"
           style={{ fontFamily: "var(--font-crafty-girls)" }}
