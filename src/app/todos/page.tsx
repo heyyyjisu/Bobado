@@ -4,7 +4,7 @@ import TodoList from "./TodoList";
 export default async function Todos() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
-  const res = await fetch("http://localhost:3000/api/todos", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/todos`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

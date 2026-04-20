@@ -32,7 +32,7 @@ export default function TodoList({ initialTodos }: Props) {
 
   async function handleAdd() {
     try {
-      const res = await fetch("http://localhost:3000/api/todos", {
+      const res = await fetch("/api/todos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export default function TodoList({ initialTodos }: Props) {
 
   async function handleDelete(id: string) {
     try {
-      const res = await fetch(`http://localhost:3000/api/todos/${id}`, {
+      const res = await fetch(`/api/todos/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export default function TodoList({ initialTodos }: Props) {
 
   async function handleCompleted(id: string, checked: boolean) {
     try {
-      const res = await fetch(`http://localhost:3000/api/todos/${id}`, {
+      const res = await fetch(`/api/todos/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +90,7 @@ export default function TodoList({ initialTodos }: Props) {
   }
 
   return (
-    <div className="max-w-md mx-auto px-4 py-6">
+    <div className="w-full max-w-md mx-auto px-4 py-6">
       <Navbar />
       <div className="flex justify-center mb-4">
         <Tree incompleteTodos={incompleteTodos} />

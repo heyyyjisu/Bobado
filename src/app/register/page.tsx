@@ -13,7 +13,7 @@ export default function Register() {
 
   async function handleRegister(e: React.MouseEvent) {
     try {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -25,16 +25,18 @@ export default function Register() {
   }
 
   return (
-    <div>
-      <div>
+    <div className="w-full max-w-md mx-auto px-4 py-6">
+      <h1 className="text-4xl text-center font-normal mb-6">bobado</h1>
+      <div className="bg-[#F0E8E0] rounded-2xl p-4 mb-4">
         <div>
-          <h1>Register</h1>
+          <h1 className="text-lg font-bold mb-3">Register</h1>
           <p>Name: </p>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             type="text"
             placeholder="What is your name?"
+            className="w-full bg-transparent outline-none text-sm mb-3 border-b border-[#CAB6A4] pb-1"
           />
           <p>Email: </p>
           <input
@@ -42,6 +44,7 @@ export default function Register() {
             onChange={(e) => setEmail(e.target.value)}
             type="email"
             placeholder="What is your email?"
+            className="w-full bg-transparent outline-none text-sm mb-3 border-b border-[#CAB6A4] pb-1"
           />
           <p>Password: </p>
           <input
@@ -50,6 +53,7 @@ export default function Register() {
             type="password"
             minLength={8}
             placeholder="What is your password?"
+            className="w-full bg-transparent outline-none text-sm mb-3 border-b border-[#CAB6A4] pb-1"
           />
           <p>Confirm password: </p>
           <input
@@ -57,6 +61,7 @@ export default function Register() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             type="password"
             placeholder="Confirm your password"
+            className="w-full bg-transparent outline-none text-sm mb-3 border-b border-[#CAB6A4] pb-1"
           />
           {password !== confirmPassword ? (
             <p className="text-red-600">Password not match</p>
@@ -64,8 +69,20 @@ export default function Register() {
             ""
           )}
         </div>
-        <button onClick={(e) => handleRegister(e)}>Register now</button>
-        <button onClick={() => router.push("/login")}>Back to log in</button>
+      </div>
+      <div className="flex justify-end gap-2">
+        <button
+          onClick={() => router.push("/login")}
+          className="text-sm opacity-50"
+        >
+          Log in
+        </button>
+        <button
+          onClick={(e) => handleRegister(e)}
+          className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm"
+        >
+          Register
+        </button>
       </div>
     </div>
   );
