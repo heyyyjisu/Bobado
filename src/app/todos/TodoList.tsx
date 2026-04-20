@@ -3,16 +3,9 @@
 import Navbar from "@/components/Navbar";
 import { getCookie } from "cookies-next";
 import { useState } from "react";
-
-type Todo = {
-  text: string;
-  _id: string;
-  date: Date;
-  isCompleted: boolean;
-  category: string;
-  recurring: boolean;
-  deadline: Date | null;
-};
+import { Todo } from "@/types/todo";
+import CategoryCard from "@/components/CategoryCard";
+import Tree from "@/components/Tree";
 
 type Props = {
   initialTodos: Todo[];
@@ -34,6 +27,9 @@ export default function TodoList({ initialTodos }: Props) {
     (todo) => todo.category === "uncategorized",
   );
 
+  //todos by isCompleted === false
+  const incompleteTodos = todos.filter((todo) => !todo.isCompleted);
+
   async function handleAdd() {
     try {
       const res = await fetch("http://localhost:3000/api/todos", {
@@ -44,8 +40,12 @@ export default function TodoList({ initialTodos }: Props) {
         },
         body: JSON.stringify({ text: todo }),
       });
+      if (!res.ok) {
+        console.error("Ai error");
+        return;
+      }
       const result = await res.json();
-      setTodos([...todos, result]);
+      setTodos([...todos, ...result]);
       setTodo("");
     } catch (error) {
       console.error(error);
@@ -90,83 +90,81 @@ export default function TodoList({ initialTodos }: Props) {
   }
 
   return (
-    <div>
+    <div className="max-w-md mx-auto px-4 py-6">
       <Navbar />
-      <div>
-        <h1>Add todo</h1>
-        <input
+      <div className="flex justify-center mb-4">
+        <Tree incompleteTodos={incompleteTodos} />
+      </div>
+      <div className="bg-[#F0E8E0] rounded-2xl p-4 mb-4">
+        <textarea
+          className="w-full bg-transparent resize-none outline-none text-sm mb-4"
+          style={{ fontFamily: "var(--font-crafty-girls)" }}
+          rows={4}
           value={todo}
           onChange={(e) => setTodo(e.target.value)}
-          placeholder="text...?"
+          placeholder={`watch your todos grow as fruits, pluck them when done! it only allows 10 todos a day, it will refresh after 24 hours.`}
         />
-        <button onClick={() => handleAdd()}>Add</button>
+        <div className="flex justify-end">
+          <button
+            className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm"
+            onClick={() => handleAdd()}
+          >
+            Grow fruits
+          </button>
+        </div>
       </div>
       <div>
-        {/* important */}
-        <h1>Important</h1>
-        {important.map((todo: Todo) => (
-          <li key={todo._id}>
-            {todo.text} {new Date(todo.date).toISOString().split("T")[0]}
-            <input
-              type="checkbox"
-              checked={todo.isCompleted}
-              onChange={() => handleCompleted(todo._id, todo.isCompleted)}
-            />
-            <button onClick={() => handleDelete(todo._id)}>Delete</button>
-          </li>
-        ))}
-        {/* can wait */}
-        <h1>Can wait</h1>
-        {canwait.map((todo: Todo) => (
-          <li key={todo._id}>
-            {todo.text} {new Date(todo.date).toISOString().split("T")[0]}
-            <input
-              type="checkbox"
-              checked={todo.isCompleted}
-              onChange={() => handleCompleted(todo._id, todo.isCompleted)}
-            />
-            <button onClick={() => handleDelete(todo._id)}>Delete</button>
-          </li>
-        ))}
-        {/* deadline */}
-        <h1>Deadline</h1>
-        {deadline.map((todo: Todo) => (
-          <li key={todo._id}>
-            {todo.text} {new Date(todo.date).toISOString().split("T")[0]}
-            <input
-              type="checkbox"
-              checked={todo.isCompleted}
-              onChange={() => handleCompleted(todo._id, todo.isCompleted)}
-            />
-            <button onClick={() => handleDelete(todo._id)}>Delete</button>
-          </li>
-        ))}
-        {/* habit */}
-        <h1>Habit</h1>
-        {habit.map((todo: Todo) => (
-          <li key={todo._id}>
-            {todo.text} {new Date(todo.date).toISOString().split("T")[0]}
-            <input
-              type="checkbox"
-              checked={todo.isCompleted}
-              onChange={() => handleCompleted(todo._id, todo.isCompleted)}
-            />
-            <button onClick={() => handleDelete(todo._id)}>Delete</button>
-          </li>
-        ))}
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          {/* important */}
+
+          <CategoryCard
+            title="important"
+            icon="/images/important.png"
+            todos={important}
+            onComplete={handleCompleted}
+            onDelete={handleDelete}
+          />
+
+          {/* deadline */}
+
+          <CategoryCard
+            title="deadline"
+            icon="/images/deadline.png"
+            todos={deadline}
+            onComplete={handleCompleted}
+            onDelete={handleDelete}
+          />
+
+          {/* can wait */}
+
+          <CategoryCard
+            title="canwait"
+            icon="/images/canwait.png"
+            todos={canwait}
+            onComplete={handleCompleted}
+            onDelete={handleDelete}
+          />
+
+          {/* habit */}
+
+          <CategoryCard
+            title="habit"
+            icon="/images/habit.png"
+            todos={habit}
+            onComplete={handleCompleted}
+            onDelete={handleDelete}
+          />
+        </div>
         {/* uncategorized */}
-        <h1>uncategorized</h1>
-        {uncategorized.map((todo: Todo) => (
-          <li key={todo._id}>
-            {todo.text} {new Date(todo.date).toISOString().split("T")[0]}
-            <input
-              type="checkbox"
-              checked={todo.isCompleted}
-              onChange={() => handleCompleted(todo._id, todo.isCompleted)}
-            />
-            <button onClick={() => handleDelete(todo._id)}>Delete</button>
-          </li>
-        ))}
+        <div className="mb-4">
+          <CategoryCard
+            title="uncategorized"
+            icon="/images/uncategorized.png"
+            todos={uncategorized}
+            onComplete={handleCompleted}
+            onDelete={handleDelete}
+          />
+        </div>
       </div>
     </div>
   );

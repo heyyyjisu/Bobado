@@ -14,6 +14,7 @@ const todoSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now,
+    expires: 86400,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -36,6 +37,6 @@ const todoSchema = new mongoose.Schema({
   },
 });
 
-const Todo = mongoose.model("Todo", todoSchema);
+const Todo = mongoose.models.Todo || mongoose.model("Todo", todoSchema);
 
 export default Todo;

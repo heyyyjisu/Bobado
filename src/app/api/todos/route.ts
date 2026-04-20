@@ -4,6 +4,14 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user.model";
+import OpenAI from "openai";
+
+type ParsedTodo = {
+  text: string;
+  category: string;
+  recurring: boolean;
+  deadline: Date | null;
+};
 
 export async function GET() {
   try {
@@ -61,7 +69,72 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const todos = await Todo.create({ text: body.text, user: user._id });
+
+    const client = new OpenAI({
+      baseURL: "https://api.deepinfra.com/v1/openai",
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    const response = await client.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are over 10 years of experienced secretary and personal assistant.",
+        },
+        {
+          role: "user",
+          content: `Examine this paragraph and extract each task: "${body.text}"
+
+          Categorize each task using these rules:
+          - "important": urgent or high priority, needs attention soon
+          - "canwait": low priority, no pressure
+          - "deadline": has a specific date, day, or time attached. Look for words like "by", "before", "due", "on Monday", "at 3pm", "this Friday". If the task contains any of these words: by, before, due, until, at [time], on [day] - it MUST be categorized as deadline, not important.
+          - "habit": recurring activity, happens regularly like daily or weekly
+          - "uncategorized": does not fit any of the above
+
+          For tasks with a deadline, extract the date into the deadline field as an ISO string. If no deadline, set it to null.
+          Set recurring to true only for habit tasks, false for everything else.
+          Summarize each task as a short action phrase, no more than 5 words.
+
+          Return only a raw JSON array with no explanation, no markdown, no code blocks.
+          Each object must have these exact quoted keys: "text", "category", "recurring", "deadline".`,
+        },
+      ],
+      model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+    });
+
+    const aiRes = response.choices[0].message.content;
+    if (!aiRes) {
+      return NextResponse.json({ msg: "No AI result." }, { status: 500 });
+    }
+
+    let result: ParsedTodo[];
+    try {
+      result = JSON.parse(aiRes);
+    } catch (error) {
+      return NextResponse.json(
+        { msg: "Could not parse tasks. Try a clearer sentence." },
+        { status: 400 },
+      );
+    }
+
+    const todosAdded = result.map((todo: ParsedTodo) => ({
+      ...todo,
+      user: user._id,
+    }));
+
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    const limitTodos = await Todo.countDocuments({
+      user: user._id,
+      date: { $gte: oneDayAgo },
+    });
+    if (limitTodos > 10) {
+      return NextResponse.json({ msg: "Daily limit reached" }, { status: 400 });
+    }
+
+    const todos = await Todo.insertMany(todosAdded);
     console.log(todos);
     return NextResponse.json(todos);
   } catch (error) {
