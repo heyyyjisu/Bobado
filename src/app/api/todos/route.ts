@@ -98,7 +98,8 @@ export async function POST(req: NextRequest) {
           Summarize each task as a short action phrase, no more than 5 words.
 
           Return only a raw JSON array with no explanation, no markdown, no code blocks.
-          Each object must have these exact quoted keys: "text", "category", "recurring", "deadline".`,
+          Each object must have these exact quoted keys: "text", "category", "recurring", "deadline".
+          The category value MUST be exactly one of these strings: "important", "canwait", "deadline", "habit", "uncategorized". No other values are allowed.`,
         },
       ],
       model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
@@ -139,5 +140,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(todos);
   } catch (error) {
     console.error(error);
+    return NextResponse.json({ msg: "Something went wrong" }, { status: 500 });
   }
 }

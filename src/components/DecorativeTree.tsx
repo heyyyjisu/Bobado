@@ -41,8 +41,6 @@ export default function DecorativeTree() {
         alt="tree drawing"
         width={256}
         height={334}
-        loading="eager"
-        priority
         className="w-full drop-shadow-md"
         style={{ filter: "drop-shadow(4px 4px 6px rgba(0,0,0,0.2))" }}
       />
