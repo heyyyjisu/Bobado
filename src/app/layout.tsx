@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
-import { Inria_Serif, Crafty_Girls } from "next/font/google";
+import { Inria_Serif, Crafty_Girls, Inter } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const inriaSerif = Inria_Serif({
   subsets: ["latin"],
@@ -26,10 +30,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inriaSerif.variable} ${craftyGirls.variable} h-full antialiased`}
+      className={cn(
+        "h-full",
+        "antialiased",
+        inriaSerif.variable,
+        craftyGirls.variable,
+        "font-sans",
+        inter.variable,
+      )}
     >
       <body className={`${inriaSerif.className} min-h-full flex flex-col`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

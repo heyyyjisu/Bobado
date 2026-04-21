@@ -1,27 +1,39 @@
 "use client";
 
 import { Todo } from "@/types/todo";
+import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
 type Card = {
   title: string;
   icon: string;
+  alt: string;
   todos: Todo[];
   onComplete: (id: string, checked: boolean) => void;
   onDelete: (id: string) => void;
+  isDeleting: string | null;
 };
 
 export default function CategoryCard({
   title,
   icon,
+  alt,
   todos,
   onComplete,
   onDelete,
+  isDeleting,
 }: Card) {
   return (
     <div className="bg-[#f5ede6] rounded-2xl p-3 shadow-sm">
       {/* header */}
       <div className="flex items-center justify-center gap-2 mb-2">
-        <img className="w-6 h-6" src={icon} />
+        <Image
+          className="w-6 h-6"
+          src={icon}
+          alt={alt}
+          width={24}
+          height={24}
+        />
         <span className="text-sm font-bold">{title}</span>
       </div>
       <ul>
@@ -39,13 +51,17 @@ export default function CategoryCard({
               )}
             </div>
             <span className={todo.isCompleted ? "line-through opacity-50" : ""}>
-              {todo.text}
+              {isDeleting === todo._id ? (
+                <Skeleton className="h-4 w-full" />
+              ) : (
+                <span>{todo.text}</span>
+              )}
             </span>
             <button
               onClick={() => onDelete(todo._id)}
               className="flex items-center justify-center ml-auto text-xs w-4 h-4 shrink-0 rounded-full border border-[#CAB6A4] cursor-pointer"
             >
-              ✘
+              ✄
             </button>
           </li>
         ))}

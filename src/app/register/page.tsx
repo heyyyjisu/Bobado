@@ -3,16 +3,23 @@
 import DecorativeTree from "@/components/DecorativeTree";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 
 export default function Register() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   async function handleRegister(e: React.MouseEvent) {
+    setLoading(true);
+    if (!email || !password || !name || !confirmPassword)
+      return toast.error("Fill right information 🖋️");
+    setLoading(true);
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
@@ -22,6 +29,7 @@ export default function Register() {
       router.push("/login");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to register 👎 Try again");
     }
   }
 
@@ -34,6 +42,7 @@ export default function Register() {
           <h1 className="text-lg font-bold mb-3">Register</h1>
           <p>Name: </p>
           <input
+            required
             value={name}
             onChange={(e) => setName(e.target.value)}
             type="text"
@@ -42,6 +51,7 @@ export default function Register() {
           />
           <p>Email: </p>
           <input
+            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type="email"
@@ -50,6 +60,7 @@ export default function Register() {
           />
           <p>Password: </p>
           <input
+            required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
@@ -59,6 +70,7 @@ export default function Register() {
           />
           <p>Confirm password: </p>
           <input
+            required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             type="password"
@@ -81,9 +93,15 @@ export default function Register() {
         </button>
         <button
           onClick={(e) => handleRegister(e)}
-          className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm"
+          className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm flex items-center gap-2"
         >
-          Register
+          {loading ? (
+            <>
+              <Spinner /> Registering...
+            </>
+          ) : (
+            "Register"
+          )}
         </button>
       </div>
     </div>

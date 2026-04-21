@@ -1,7 +1,8 @@
 "use client";
 
 import { Todo } from "@/types/todo";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 type Fruit = {
   incompleteTodos: Todo[];
@@ -13,76 +14,84 @@ export default function Tree({ incompleteTodos }: Fruit) {
   >([]);
 
   const categoryImages = {
-    important: "/images/important.png",
-    canwait: "/images/canwait.png",
-    deadline: "/images/deadline.png",
-    habit: "/images/habit.png",
-    uncategorized: "/images/uncategorized.png",
+    important: "/images/important.webp",
+    canwait: "/images/canwait.webp",
+    deadline: "/images/deadline.webp",
+    habit: "/images/habit.webp",
+    uncategorized: "/images/uncategorized.webp",
+  };
+
+  const categoryAlts = {
+    important: "apple",
+    canwait: "grape",
+    deadline: "orange",
+    habit: "lemon",
+    uncategorized: "peach",
   };
 
   const treeRef = useRef<HTMLImageElement>(null);
 
-  function handleTreeLoad() {
+  function seedFromId(id: string): number {
+    return id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  }
+
+  function generatePosition(treeWidth: number, treeHeight: number, id: string) {
+    const fruitSize = 32;
+    const seed1 = (seedFromId(id) % 100) / 100;
+    const seed2 = (seedFromId(id.split("").reverse().join("")) % 100) / 100;
+    const x = treeWidth * 0.15 + seed1 * (treeWidth * 0.7 - fruitSize);
+    const y = treeHeight * 0.05 + seed2 * (treeHeight * 0.6 - fruitSize);
+    return { x, y };
+  }
+
+  const handleTreeLoad = useCallback(() => {
     if (!treeRef.current) return;
     const treeWidth = treeRef.current.width;
     const treeHeight = treeRef.current.height;
 
     const positions: { x: number; y: number }[] = [];
 
-    incompleteTodos.forEach(() => {
-      const pos = generatePosition(positions, treeWidth, treeHeight);
+    incompleteTodos.forEach((todo) => {
+      const pos = generatePosition(treeWidth, treeHeight, todo._id);
       positions.push(pos);
     });
 
     setFruitPositions(positions);
-  }
-
-  function generatePosition(
-    existing: { x: number; y: number }[],
-    treeWidth: number,
-    treeHeight: number,
-  ) {
-    const fruitSize = 32;
-    let x: number, y: number;
-    let attempts = 0;
-
-    do {
-      x = treeWidth * 0.15 + Math.random() * (treeWidth * 0.7 - fruitSize);
-      y = treeHeight * 0.05 + Math.random() * (treeHeight * 0.6 - fruitSize);
-      attempts++;
-    } while (
-      attempts < 50 &&
-      existing.some(
-        (pos) => Math.sqrt((x - pos.x) ** 2 + (y - pos.y) ** 2) < fruitSize,
-      )
-    );
-    return { x, y };
-  }
+  }, [incompleteTodos]);
 
   useEffect(() => {
     if (treeRef.current?.complete) {
       handleTreeLoad();
     }
-  }, [incompleteTodos.length]);
+  }, [incompleteTodos]);
 
   return (
     <div>
       <div className="relative">
-        <img
+        <Image
           ref={treeRef}
-          src="/images/tree.png"
+          src="/images/tree.webp"
+          alt="tree drawing"
+          width={256}
+          height={334}
+          loading="eager"
+          priority
           onLoad={handleTreeLoad}
           className="w-64 drop-shadow-md"
           style={{ filter: "drop-shadow(4px 4px 6px rgba(0,0,0,0.2))" }}
         />
         {fruitPositions.slice(0, incompleteTodos.length).map((pos, index) => (
-          <img
+          <Image
             key={incompleteTodos[index]._id}
             src={categoryImages[incompleteTodos[index].category]}
+            alt={categoryAlts[incompleteTodos[index].category]}
+            width={32}
+            height={32}
             className="absolute w-8 h-8 fruit-sway drop-shadow-md"
             style={{
               left: pos.x,
               top: pos.y,
+              animationDelay: `${index * 0.3}s`,
               filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.2))",
             }}
           />

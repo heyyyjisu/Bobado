@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     const user = await User.findOne({ email });
 
     if (!user) {
-      throw new Error("User not found");
+      return NextResponse.json({ msg: "User not found" }, { status: 401 });
     } else if (await bcrypt.compare(password, user.password)) {
       const token = jwt.sign({ email: user.email }, JWT);
       return NextResponse.json({ token });

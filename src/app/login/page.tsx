@@ -4,26 +4,38 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { setCookie } from "cookies-next";
 import DecorativeTree from "@/components/DecorativeTree";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   async function handleLogin() {
+    if (!email || !password) return toast.error("Fill right information.");
+    setLoading(true);
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+      if (!res.ok) {
+        console.error("Login failed");
+        toast.error("User not found 📂");
+        setLoading(false);
+        return;
+      }
       const result = await res.json();
       console.log(result);
       setCookie("token", result.token);
       router.push("/todos");
     } catch (error) {
       console.error(error);
+      toast.error("Fail to log in 👎 Try again");
     }
   }
 
@@ -35,6 +47,7 @@ export default function Login() {
         <h1 className="text-lg font-bold mb-3">Log in</h1>
         <p className="text-sm mb-1">Email</p>
         <input
+          required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
@@ -43,6 +56,7 @@ export default function Login() {
         />
         <p className="text-sm mb-1">Password</p>
         <input
+          required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
@@ -59,9 +73,15 @@ export default function Login() {
         </button>
         <button
           onClick={() => handleLogin()}
-          className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm"
+          className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm text-sm disabled:opacity-50 flex items-center gap-2"
         >
-          Log in
+          {loading ? (
+            <>
+              <Spinner /> Logging in...
+            </>
+          ) : (
+            "Log in"
+          )}
         </button>
       </div>
     </div>
