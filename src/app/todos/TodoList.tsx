@@ -113,7 +113,6 @@ export default function TodoList({ initialTodos }: Props) {
           todo._id === id ? { ...todo, isCompleted: !checked } : todo,
         ),
       );
-      toast("Todo completed! ✨");
     } catch (error) {
       console.error(error);
     }
@@ -133,24 +132,7 @@ export default function TodoList({ initialTodos }: Props) {
       <div className="flex justify-center mb-4">
         <Tree incompleteTodos={incompleteTodos} />
       </div>
-      <div className="bg-[#F0E8E0] rounded-2xl p-4 mb-4 shadow-sm">
-        <textarea
-          className="w-full bg-transparent resize-none outline-none text-sm mb-4"
-          style={{ fontFamily: "var(--font-crafty-girls)" }}
-          rows={4}
-          value={todo}
-          onChange={(e) => setTodo(e.target.value)}
-          placeholder={`watch your todos grow as fruits, pluck them when done! it only allows 10 todos a day, it will refresh after 24 hours. you can write in natural language if you want :)`}
-        />
-        <div className="flex justify-end">
-          <button
-            className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm flex items-center gap-2"
-            onClick={() => handleAdd()}
-          >
-            {isAdding ? fruits[fruitIndex] : "Grow fruits!"}
-          </button>
-        </div>
-      </div>
+
       <div>
         <div className="grid grid-cols-2 gap-4 mb-4">
           {/* important */}
@@ -212,6 +194,24 @@ export default function TodoList({ initialTodos }: Props) {
             onDelete={handleDelete}
             isDeleting={isDeleting}
           />
+        </div>
+      </div>
+      <div className="bg-[#F0E8E0] rounded-2xl p-4 mb-4 shadow-sm">
+        <textarea
+          className="w-full bg-transparent resize-none outline-none text-sm mb-4"
+          style={{ fontFamily: "var(--font-crafty-girls)" }}
+          rows={4}
+          value={todo}
+          onChange={(e) => setTodo(e.target.value)}
+          placeholder={`watch your todos grow as fruits, pluck them when done! it only allows 10 todos a day, it will refresh after 24 hours. you can write in natural language if you want :)`}
+        />
+        <div className="flex justify-end">
+          <button
+            className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm flex items-center gap-2 shadow-sm"
+            onClick={() => handleAdd()}
+          >
+            {isAdding ? fruits[fruitIndex] : "Grow fruits!"}
+          </button>
         </div>
       </div>
     </div>

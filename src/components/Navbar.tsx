@@ -15,7 +15,7 @@ export default function Navbar() {
     <div className="relative">
       <h1 className="text-4xl text-center font-normal mb-6">bobado</h1>
       <button
-        className="absolute right-0 bottom-0 bg-[#CAB6A4] rounded-full px-4 py-1 text-sm"
+        className="absolute right-0 bottom-0 bg-[#CAB6A4] rounded-full px-4 py-1 text-sm shadow-sm"
         onClick={() => handleLogout()}
       >
         Log out

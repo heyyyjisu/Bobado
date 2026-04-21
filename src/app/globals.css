@@ -22,7 +22,6 @@ body {
 
 button {
   cursor: pointer;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .fruit-sway {

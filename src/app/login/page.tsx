@@ -73,7 +73,7 @@ export default function Login() {
         </button>
         <button
           onClick={() => handleLogin()}
-          className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm text-sm disabled:opacity-50 flex items-center gap-2"
+          className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm text-sm disabled:opacity-50 flex items-center gap-2 shadow-sm"
         >
           {loading ? (
             <>

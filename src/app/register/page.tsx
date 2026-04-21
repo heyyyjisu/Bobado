@@ -93,7 +93,7 @@ export default function Register() {
         </button>
         <button
           onClick={(e) => handleRegister(e)}
-          className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm flex items-center gap-2"
+          className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm flex items-center gap-2 shadow-sm"
         >
           {loading ? (
             <>
