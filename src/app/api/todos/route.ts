@@ -86,20 +86,23 @@ export async function POST(req: NextRequest) {
           role: "user",
           content: `Examine this paragraph and extract each task: "${body.text}"
 
-          Categorize each task using these rules:
-          - "important": urgent or high priority, needs attention soon
-          - "canwait": low priority, no pressure
-          - "deadline": has a specific date, day, or time attached. Look for words like "by", "before", "due", "on Monday", "at 3pm", "this Friday". If the task contains any of these words: by, before, due, until, at [time], on [day] - it MUST be categorized as deadline, not important.
-          - "habit": recurring activity, happens regularly like daily or weekly
-          - "uncategorized": does not fit any of the above
+Categorize each task using these rules:
+- "important": urgent or high priority, needs attention soon. Does NOT have a specific date.
+- "canwait": low priority, no pressure, not urgent at all
+- "deadline": has a specific date, day, or time attached. Look for words like "by", "before", "due", "on Monday", "at 3pm", "this Friday", "tonight", "tomorrow". If ANY time reference exists, it MUST be "deadline", never "important".
+- "habit": recurring activity that happens regularly like daily, weekly, every morning, always, usually
+- "uncategorized": does not fit any of the above
 
-          For tasks with a deadline, extract the date into the deadline field as an ISO string. If no deadline, set it to null.
-          Set recurring to true only for habit tasks, false for everything else.
-          Summarize each task as a short action phrase, no more than 5 words.
+For deadline tasks, include the deadline in the text like "Submit report by Friday". 
+For tasks with a deadline, extract the date into the deadline field as an ISO string. If no deadline, set it to null.
+Set recurring to true only for habit tasks, false for everything else.
+Summarize each task as a short action phrase, no more than 6 words.
 
-          Return only a raw JSON array with no explanation, no markdown, no code blocks.
-          Each object must have these exact quoted keys: "text", "category", "recurring", "deadline".
-          The category value MUST be exactly one of these strings: "important", "canwait", "deadline", "habit", "uncategorized". No other values are allowed.`,
+Be careful and precise. When in doubt between important and deadline, always choose deadline if any time reference exists.
+
+Return only a raw JSON array with no explanation, no markdown, no code blocks.
+Each object must have these exact quoted keys: "text", "category", "recurring", "deadline".
+The category value MUST be exactly one of these strings: "important", "canwait", "deadline", "habit", "uncategorized". No other values are allowed.`,
         },
       ],
       model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",

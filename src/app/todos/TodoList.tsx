@@ -65,8 +65,9 @@ export default function TodoList({ initialTodos }: Props) {
         body: JSON.stringify({ text: todo }),
       });
       if (!res.ok) {
-        console.error("Ai error");
-        toast.error("Something went wrong 🫯 Try again");
+        const error = await res.json();
+        toast.error(error.msg || "Something went wrong 🫯 Try again");
+        setisAdding(false);
         return;
       }
       const result = await res.json();
@@ -81,6 +82,8 @@ export default function TodoList({ initialTodos }: Props) {
   }
 
   async function handleDelete(id: string) {
+    setTodos(todos.filter((todo) => todo._id !== id));
+    toast("Todo deleted 🗑️");
     try {
       const res = await fetch(`/api/todos/${id}`, {
         method: "DELETE",
@@ -89,8 +92,6 @@ export default function TodoList({ initialTodos }: Props) {
           Authorization: `Bearer ${token}`,
         },
       });
-      setTodos(todos.filter((todo) => todo._id !== id));
-      toast("Todo deleted.");
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete todo 👎 Try again");
@@ -98,6 +99,11 @@ export default function TodoList({ initialTodos }: Props) {
   }
 
   async function handleCompleted(id: string, checked: boolean) {
+    setTodos(
+      todos.map((todo) =>
+        todo._id === id ? { ...todo, isCompleted: !checked } : todo,
+      ),
+    );
     try {
       const res = await fetch(`/api/todos/${id}`, {
         method: "PUT",
@@ -108,11 +114,6 @@ export default function TodoList({ initialTodos }: Props) {
         body: JSON.stringify({ isCompleted: !checked }),
       });
       const result = await res.json();
-      setTodos(
-        todos.map((todo) =>
-          todo._id === id ? { ...todo, isCompleted: !checked } : todo,
-        ),
-      );
     } catch (error) {
       console.error(error);
     }
