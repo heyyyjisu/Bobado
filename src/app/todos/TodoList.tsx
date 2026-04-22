@@ -77,6 +77,7 @@ export default function TodoList({ initialTodos }: Props) {
       toast("Fruits grew! 🌳");
     } catch (error) {
       console.error(error);
+      setisAdding(false);
       toast.error("Something went wrong 🫯 Try again");
     }
   }
@@ -204,9 +205,11 @@ export default function TodoList({ initialTodos }: Props) {
           rows={4}
           value={todo}
           onChange={(e) => setTodo(e.target.value)}
-          placeholder={`watch your todos grow as fruits, pluck them when done! it only allows 10 todos a day, it will refresh after 24 hours. you can write in natural language if you want :)`}
+          maxLength={1500}
+          placeholder={`watch your todos grow as fruits, pluck them when done! todos will refresh after 24 hours. you can write in natural language if you want :) 1500 charancters max!`}
         />
-        <div className="flex justify-end">
+        <div className="flex justify-end items-center gap-2">
+          <p className="text-xs opacity-40 leading-none">{todo.length}/1500</p>
           <button
             className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm flex items-center gap-2 shadow-sm"
             onClick={() => handleAdd()}

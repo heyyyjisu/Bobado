@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user.model";
 import OpenAI from "openai";
 
+export const maxDuration = 30;
+
 type ParsedTodo = {
   text: string;
   category: string;
@@ -127,16 +129,6 @@ The category value MUST be exactly one of these strings: "important", "canwait",
       ...todo,
       user: user._id,
     }));
-
-    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-
-    const limitTodos = await Todo.countDocuments({
-      user: user._id,
-      date: { $gte: oneDayAgo },
-    });
-    if (limitTodos > 10) {
-      return NextResponse.json({ msg: "Daily limit reached" }, { status: 400 });
-    }
 
     const todos = await Todo.insertMany(todosAdded);
     console.log(todos);
