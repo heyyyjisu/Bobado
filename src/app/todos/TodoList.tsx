@@ -7,6 +7,7 @@ import { Todo } from "@/types/todo";
 import CategoryCard from "@/components/CategoryCard";
 import Tree from "@/components/Tree";
 import { toast } from "sonner";
+import ClearAllBtn from "@/components/ClearAllBtn";
 
 type Props = {
   initialTodos: Todo[];
@@ -120,6 +121,23 @@ export default function TodoList({ initialTodos }: Props) {
     }
   }
 
+  async function handleClear() {
+    setTodos([]);
+    toast("Todos are all cleared!💥");
+    try {
+      const res = await fetch(`/api/todos`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete todo 👎 Try again");
+    }
+  }
+
   useEffect(() => {
     if (!isAdding) return;
     const timer = setInterval(() => {
@@ -131,6 +149,7 @@ export default function TodoList({ initialTodos }: Props) {
   return (
     <div className="w-full max-w-md mx-auto px-4 py-6">
       <Navbar />
+      <ClearAllBtn onClear={handleClear} />
       <div className="flex justify-center mb-4">
         <Tree incompleteTodos={incompleteTodos} />
       </div>

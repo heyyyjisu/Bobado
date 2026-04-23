@@ -138,3 +138,34 @@ The category value MUST be exactly one of these strings: "important", "canwait",
     return NextResponse.json({ msg: "Something went wrong" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const JWT = process.env.JWT_SECRET;
+    if (!JWT) {
+      throw new Error("Failed to get token");
+    }
+
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+    if (!token) {
+      return NextResponse.json({ msg: "Token not found" }, { status: 401 });
+    }
+
+    const verified = jwt.verify(token, JWT);
+    if (typeof verified === "string") {
+      return NextResponse.json({ msg: "Invalid token" }, { status: 401 });
+    }
+    await mongo();
+
+    const user = await User.findOne({ email: verified.email });
+    if (!user) {
+      return NextResponse.json({ msg: "User not found" }, { status: 401 });
+    }
+    const todos = await Todo.deleteMany({ user: user._id });
+    return NextResponse.json({ msg: "All todos cleard ✨" });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ msg: "Server error" }, { status: 500 });
+  }
+}

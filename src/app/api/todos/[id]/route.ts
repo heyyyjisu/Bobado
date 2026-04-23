@@ -35,6 +35,7 @@ export async function DELETE(
     return NextResponse.json(todos);
   } catch (error) {
     console.error(error);
+    return NextResponse.json({ msg: "Server error" }, { status: 500 });
   }
 }
 
@@ -72,5 +73,6 @@ export async function PUT(
     return NextResponse.json(todos);
   } catch (error) {
     console.error(error);
+    return NextResponse.json({ msg: "Server error" }, { status: 500 });
   }
 }
