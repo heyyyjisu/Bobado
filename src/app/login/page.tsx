@@ -31,7 +31,7 @@ export default function Login() {
       }
       const result = await res.json();
       console.log(result);
-      setCookie("token", result.token);
+      setCookie("token", result.token, { maxAge: 60 * 60 * 24 * 30 });
       router.push("/todos");
     } catch (error) {
       console.error(error);
