@@ -13,13 +13,23 @@ export default function Navbar() {
 
   return (
     <div className="relative">
-      <h1 className="text-4xl text-center font-normal mb-6">bobado</h1>
-      <button
-        className="absolute right-0 bottom-0 bg-[#CAB6A4] rounded-full px-4 py-1 text-sm shadow-sm"
-        onClick={() => handleLogout()}
-      >
-        Log out
-      </button>
+      <h1 className="text-4xl text-center font-normal mb-4">bobado</h1>
+      <div className="relative flex justify-end items-center">
+        <a
+          href="https://buymeacoffee.com/heyyyjisu"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute left-1/2 -translate-x-1/2 text-xs opacity-40"
+        >
+          ☕ buy me a coffee
+        </a>
+        <button
+          className="bg-[#CAB6A4] rounded-full px-4 py-1 text-sm shadow-sm"
+          onClick={() => handleLogout()}
+        >
+          Log out
+        </button>
+      </div>
     </div>
   );
 }

@@ -24,7 +24,9 @@ export default function ClearAllBtn({ onClear }: Props) {
     <div className="text-right">
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant="destructive">Clear all</Button>
+          <button className="text-sm text-#CAB6A4 underline opacity-60 mr-3 mt-2">
+            Clear all
+          </button>
         </AlertDialogTrigger>
         <AlertDialogContent size="sm">
           <AlertDialogHeader>
