@@ -16,6 +16,7 @@ export default function Navbar() {
       <h1 className="text-4xl text-center font-normal mb-4">bobado</h1>
       <div className="relative flex justify-end items-center">
         <a
+          data-testid={`buymeacoffee`}
           href="https://buymeacoffee.com/heyyyjisu"
           target="_blank"
           rel="noopener noreferrer"
