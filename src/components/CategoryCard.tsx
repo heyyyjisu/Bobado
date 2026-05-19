@@ -43,6 +43,7 @@ export default function CategoryCard({
             className="flex items-center gap-2 py-1 text-sm list-none"
           >
             <div
+              data-testid={`complete-${todo._id}`}
               onClick={() => onComplete(todo._id, todo.isCompleted)}
               className={`w-4 h-4 shrink-0 rounded-full border border-[#CAB6A4] cursor-pointer flex items-center justify-center ${todo.isCompleted ? "bg-[#CAB6A4]" : "bg-transparent"}`}
             >
