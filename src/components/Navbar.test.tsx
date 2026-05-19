@@ -5,9 +5,11 @@ import Navbar from "@/components/Navbar";
 import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 
+const mockPush = jest.fn();
+
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
-    push: jest.fn(),
+    push: mockPush,
   }),
 }));
 
@@ -29,12 +31,11 @@ describe("Navbar", () => {
 
   test("calls logout when it is clicked", async () => {
     const user = userEvent.setup();
-
     render(<Navbar />);
 
     await user.click(screen.getByRole("button", { name: "Log out" }));
 
-    expect(useRouter).toHaveBeenCalledTimes(1);
     expect(deleteCookie).toHaveBeenCalledTimes(1);
+    expect(mockPush).toHaveBeenCalledWith("/login");
   });
 });
